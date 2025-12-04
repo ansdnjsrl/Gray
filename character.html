@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hover 연동 이미지 교체</title>
+  <style>
+    html,body{
+      margin:0; height:100%;
+      background:#ffffff; color:#fff;
+      display:flex; justify-content:center; align-items:center;
+      font-family:system-ui,Apple SD Gothic Neo,'Malgun Gothic',sans-serif;
+    }
+
+    .wrap{
+      width:min(1100px,90vw);
+      display:grid;
+      grid-template-columns: 1fr minmax(220px,340px);
+      gap:clamp(20px,4vw,60px);
+      align-items:center;
+    }
+
+    /* 왼쪽 2x2 이미지 그리드 */
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:20px;
+    }
+
+    .image-box{
+      position:relative;
+      aspect-ratio:1/1;
+      overflow:hidden;
+      border-radius:10px;
+      box-shadow:0 8px 24px rgba(0,0,0,.35);
+      cursor:pointer;
+    }
+
+    .image-box img{
+      position:absolute;
+      inset:0;
+      width:100%; height:100%;
+      object-fit:cover;
+      transition:opacity .4s ease;
+    }
+
+    .image-box img.hover{opacity:0}
+    .image-box:hover img.hover{opacity:1}
+    .image-box:hover img.default{opacity:0}
+    /* 클릭해서 활성화된 카드 유지 */
+.image-box.active img.hover { opacity: 1; }
+.image-box.active img.default { opacity: 0; }
+
+
+    /* 오른쪽 텍스트/버튼 */
+    .side{
+      display:flex; flex-direction:column; align-items:center; gap:24px;
+    }
+
+    .text-img{
+      width:min(260px,60vw);
+      transition:opacity .4s ease;
+    }
+
+    /* 버튼을 화면 오른쪽 아래에 고정 */
+.btn{
+  position: fixed;                 /* ← 고정 */
+  right: clamp(820px, 3vw, 32px);   /* 여백 */
+  bottom: clamp(270px, 3vw, 32px);  /* 여백 */
+  width:160px;
+  border-radius:8px;
+  box-shadow:none;
+  z-index: 1000;
+  transition: filter .15s ease;    /* 위치 변화 제거 */
+}
+
+/* 호버 시 밝기만 변경 (위치 고정) */
+.btn:hover{
+  filter: brightness(1.1);
+}
+
+    /* 반응형 */
+    @media(max-width:800px){
+      .wrap{grid-template-columns:1fr;}
+      .side{order:-1}
+    }
+      /* ✅ 뒤로가기 버튼 스타일 */
+    .back-btn{
+  position:fixed;
+  top:20px; left:20px;
+  background:none;          /* 배경 제거 */
+  border:none;              /* 테두리 제거 */
+  padding:0;                /* 여백 제거 */
+  cursor:pointer;
+  z-index:10;
+}
+
+.back-btn img{
+  width:60px;               /* 버튼 이미지 크기 */
+  height:auto;
+  display:block;
+  transition:filter .2s ease;
+}
+
+.back-btn:hover img{
+  filter:brightness(1.2);   /* 호버 시 살짝 밝게 */
+}
+
+    .back-btn:active{
+      transform:translateY(0);
+    }
+  </style>
+</head>
+<body>
+  
+
+  <!-- 🔙 뒤로가기 버튼 -->
+<button class="back-btn" onclick="history.back()">
+  <img src="back1.png" alt="뒤로가기" />
+</button>
+
+
+  <main class="wrap">
+    <!-- 왼쪽 그리드 -->
+    <section class="grid">
+      <div class="image-box" data-text="profile1.png">
+        <img class="default" src="1bw.png" alt="">
+        <img class="hover" src="1.png" alt="">
+      </div>
+
+      <div class="image-box" data-text="profile2.png">
+        <img class="default" src="2bw.png" alt="">
+        <img class="hover" src="2.png" alt="">
+      </div>
+
+      <div class="image-box" data-text="profile3.png">
+        <img class="default" src="3bw.png" alt="">
+        <img class="hover" src="3.png" alt="">
+      </div>
+
+      <div class="image-box" data-text="profile4.png">
+        <img class="default" src="4bw.png" alt="">
+        <img class="hover" src="4.png" alt="">
+      </div>
+    </section>
+
+    <!-- 오른쪽 텍스트/버튼 -->
+    <aside class="side">
+      <img id="textImage" class="text-img"
+           src="profile.png"
+           alt="텍스트 이미지" />
+      <a href="nextpage.html">    <!-- 이동할 페이지 경로 -->
+  <img class="btn"
+       src="button1.png"
+       alt="다음 페이지로 이동 버튼" />
+</a>
+
+    </aside>
+  </main>
+
+  <script>
+    // 모든 사진 요소 선택
+    const boxes = document.querySelectorAll('.image-box');
+    const textImg = document.getElementById('textImage');
+let activeBox = null; // ✅ 추가: 현재 클릭(고정)된 카드
+
+boxes.forEach(box => {
+  const newSrc = box.dataset.text;
+
+  // 마우스 올렸을 때: 고정된 카드가 아니면 미리보기
+  box.addEventListener('mouseenter', () => {
+    if (box !== activeBox) {
+      textImg.style.opacity = 0;
+      setTimeout(() => {
+        textImg.src = newSrc;
+        textImg.style.opacity = 1;
+      }, 200);
+    }
+  });
+
+  // 마우스 벗어났을 때: 고정된 카드가 아니면 원래대로
+  box.addEventListener('mouseleave', () => {
+    if (box !== activeBox) {
+      textImg.style.opacity = 0;
+      setTimeout(() => {
+        textImg.src = activeBox ? activeBox.dataset.text : "profile.png";
+        textImg.style.opacity = 1;
+      }, 200);
+    }
+  });
+
+  // ✅ 클릭 시: 해당 카드 고정/해제
+  box.addEventListener('click', () => {
+    if (activeBox && activeBox !== box) {
+      activeBox.classList.remove('active'); // 이전 고정 해제
+    }
+
+    if (box.classList.contains('active')) {
+      // 다시 클릭하면 해제
+      box.classList.remove('active');
+      activeBox = null;
+      textImg.src = "profile.png";
+    } else {
+      box.classList.add('active');
+      activeBox = box;
+      textImg.src = newSrc;
+    }
+  });
+});
+
+  </script>
+</body>
+</html>

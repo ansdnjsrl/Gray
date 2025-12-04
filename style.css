@@ -1,0 +1,197 @@
+
+
+/*
+ * Minimal CSS: Skrollr 구동 및 로딩 화면 전환에 필수적인 스타일만 남김
+ */
+
+/* ==================== 1. Normalize.css 최소 부분 ==================== */
+html {
+    font-size: 100%;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+}
+
+html, button, input, select, textarea {
+    font-family: sans-serif;
+}
+
+body {
+    margin: 0;
+}
+
+img {
+    border: 0;
+}
+
+.clearfix:before, .clearfix:after {
+    content: " ";
+    display: table;
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+.clearfix {
+    *zoom:1;
+}
+
+/* ==================== 2. Custom/Skrollr 필수 스타일 ==================== */
+
+/* HTML 파일에서 설정된 기본 폰트와 배경색 */
+body {
+    font-family: 'Ubuntu'; /* 해당 폰트가 로드되지 않으면 기본 sans-serif가 적용됨 */
+    font-weight: 300;
+    font-style: normal;
+    color: #3d3d3d;
+    width: 100%;
+    height: 100%;
+    background: #9ac97e;
+}
+
+/* Skrollr 라이브러리가 컨트롤하는 최상위 바디 요소 */
+#skrollr-body {
+    width: 100%;
+    height: 100%;
+}
+
+/* 로딩 화면 스타일 */
+.loading {
+    width: 100%;
+    height: 100%;
+    background: #78bd6a; /* 배경색 유지 */
+    position: absolute;
+}
+
+.loading-container {
+    /* 로딩 GIF 위치를 잡기 위한 컨테이너 */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* 중앙 정렬 (원본 코드와 다름, 단순화) */
+    /* 원본 코드의 배경 이미지 설정은 제거했습니다. (img/every-last-drop.png) */
+    width: 200px; /* 임시 크기 */
+    height: 200px; /* 임시 크기 */
+}
+
+/* Skrollr로 애니메이션을 적용하는 요소는 absolute나 fixed가 기본 */
+img {
+    position: absolute; /* 모든 이미지를 절대 위치 기준으로 만듭니다. */
+}
+
+/* 메인 컨테이너 (JS 로드 후 fadeIn으로 표시됨) */
+.container {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    background: #78bd6a;
+    display: none; /* JS가 로드될 때까지 숨김 */
+}
+
+/* 각 장면(Scene)이 겹쳐서 고정되어 보이게 함 */
+.scene {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}
+
+/* 캐릭터 및 가구가 들어가는 레이어의 상대적인 기준점 */
+.character-container, .sky-inner, .wall-inner {
+    width: 1000px; /* 화면 중앙에 1000px 폭의 영역 확보 */
+    margin: 0 auto;
+    position: relative;
+    height: 100%; /* 부모 높이를 상속 */
+}
+
+/* Scene 1의 기본 배경/색상 */
+.sky {
+    height: 200px; /* 높이 설정 */
+    background: #8cc9dc;
+}
+
+/* 캐릭터의 기본 위치 및 크기 */
+img.juan {
+    top: 360px;
+    left: 480px;
+    max-width: 126px;
+    height: 80%;
+}
+
+/* 패럴랙스 애니메이션의 자연스러운 작동을 위해 필요할 수 있음 */
+.click-through {
+    pointer-events: none;
+}
+
+/* ==================== 3. Scene 1-4의 기본 배경색 (CSS) ==================== */
+/* Skrollr가 data-36000 등에 따라 background-color를 직접 제어하므로,
+   CSS 파일에 명시된 배경 관련 클래스들은 최소한으로 남겼습니다. */
+
+.bedroom-floor {
+    height: 100%;
+    background: #78bd6a;
+}
+
+.bathroom-wall {
+    height: 36%;
+    background: #5e9193;
+}
+
+.bathroom-floor {
+    height: 64%;
+    background: transparent; /* 원본의 타일 이미지 로드를 제거 */
+}
+
+.wardrobe-wall {
+    height: 36%;
+    background: #74525f;
+}
+
+.wardrobe-floor {
+    height: 64%;
+    background: #c1e2ec;
+}
+
+.kitchen-wall {
+    height: 36%;
+    background: #5e9193;
+}
+
+.kitchen-floor {
+    height: 75%;
+    background: #d0d5d1;
+}
+
+/* ==================== 4. Scene 5-7의 기본 배경/요소 (CSS) ==================== */
+
+.grass {
+    background: #acc666;
+}
+
+.road {
+    /* road 배경 이미지 로드는 제거했습니다. */
+    width: 1000px;
+    height: 4000px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.space {
+    width: 100%;
+    height: 100%;
+    background: #354250;
+}
+
+.space-container {
+    width: 1000px;
+    height: 100%;
+    margin: 0 auto;
+    position: relative;
+}
+
+.living-room-container {
+    width: 1000px;
+    height: 100%;
+    margin: 0 auto;
+    position: relative;
+}
+

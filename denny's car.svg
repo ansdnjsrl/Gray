@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_레이어_2" data-name="레이어 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 497.51">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #bfcdcd;
+      }
+
+      .cls-2 {
+        fill: #91afc0;
+      }
+
+      .cls-3 {
+        fill: #0b4968;
+      }
+
+      .cls-4 {
+        fill: #de8333;
+      }
+
+      .cls-5 {
+        fill: #999;
+      }
+
+      .cls-6 {
+        fill: #003b68;
+      }
+
+      .cls-7 {
+        fill: #cb6f3c;
+      }
+
+      .cls-8 {
+        fill: #0b5989;
+      }
+    </style>
+  </defs>
+  <g id="_레이어_1-2" data-name="레이어 1">
+    <g>
+      <g id="_레이어_28" data-name=" 레이어 28">
+        <g>
+          <g>
+            <rect x="14.21" y="437.12" width="26.75" height="60.39"/>
+            <rect x="209.59" y="437.12" width="26.75" height="60.39"/>
+            <rect class="cls-6" x="0" y="413.48" width="250" height="60.39"/>
+            <path class="cls-6" d="M0,293.13v69.71h250v-69.71H0ZM242.23,353.3H7.77v-50.62h234.46v50.62Z"/>
+            <rect class="cls-8" x="0" y="362.86" width="250" height="50.62"/>
+            <rect class="cls-5" x="7.77" y="302.68" width="234.46" height="50.62"/>
+            <rect class="cls-8" x="0" y="159.49" width="250" height="133.66"/>
+            <rect class="cls-3" x="0" width="250" height="159.49"/>
+            <rect class="cls-6" x="7.77" y="7.18" width="234.46" height="69.71"/>
+            <rect class="cls-8" x="7.77" y="73.34" width="234.46" height="84.18"/>
+          </g>
+          <rect class="cls-5" x="93.27" y="443.36" width="67.88" height="23.96"/>
+          <rect class="cls-4" x="14.21" y="428.18" width="26.75" height="26.75"/>
+          <rect class="cls-7" x="14.21" y="428.18" width="13.38" height="26.75"/>
+          <rect class="cls-4" x="209.59" y="428.18" width="26.75" height="26.75"/>
+          <rect class="cls-7" x="222.97" y="428.18" width="13.38" height="26.75"/>
+        </g>
+      </g>
+      <rect class="cls-2" x="7.77" y="302.68" width="234.46" height="50.62"/>
+      <rect class="cls-1" x="183.49" y="302.68" width="58.74" height="25.31"/>
+      <rect class="cls-1" x="171.61" y="315.34" width="58.74" height="25.31"/>
+      <rect class="cls-1" x="158.28" y="326.66" width="58.74" height="25.31"/>
+      <rect class="cls-1" x="146.4" y="339.31" width="58.74" height="12.7"/>
+    </g>
+  </g>
+</svg>

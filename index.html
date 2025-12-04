@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GRAY — Home</title>
+  <style>
+    html,body{height:100%}
+    body{margin:0;background:#000}
+
+    /* Fullscreen hero */
+    .hero{position:relative;min-height:100dvh;isolation:isolate}
+    .layer{position:absolute;inset:0;background-size:cover;background-position:center center;background-repeat:no-repeat;transition:opacity .6s ease}
+    .layer.base{opacity:1}
+    .layer.swap{opacity:0}
+
+    /* Hover zones (left/right) */
+    .zones{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr;z-index:5}
+    .zone{position:relative;cursor:pointer;}
+    .zone::after{content:"";position:absolute;inset:0}
+    /* NOTE: 시각적 표시가 필요하면 background-color: rgba(255,255,255,0.1); 등으로 영역 표시 가능 */
+
+    .visually-hidden{
+      position:absolute;
+      width:1px;height:1px;
+      padding:0;margin:-1px;
+      overflow:hidden;
+      clip:rect(0,0,0,0);
+      white-space:nowrap;border:0;
+    }
+  </style>
+</head>
+<body>
+  <section id="hero" class="hero" aria-label="홈 화면: GRAY">
+    <div id="bg-base" class="layer base"></div>
+    <div id="bg-swap" class="layer swap"></div>
+
+    <!-- 왼/오른쪽 반쪽 호버 영역 -->
+    <div class="zones" aria-hidden="true">
+      <div id="zone-left" class="zone" title="Dark Mode"></div>
+      <div id="zone-right" class="zone" title="White Mode"></div>
+    </div>
+
+    <p class="visually-hidden">
+      왼쪽에 마우스를 올리면 두 번째 이미지, 오른쪽에 올리면 세 번째 이미지가 나타납니다.
+      마우스를 떼면 기본 이미지로 돌아갑니다.
+      왼쪽 클릭 시 white.html, 오른쪽 클릭 시 character.html로 이동합니다.
+    </p>
+  </section>
+
+  <script>
+    // ====== CONFIG ======
+    const IMAGES = [
+      'home1.png', // 기본(첫 화면)
+      'home2.png', // 왼쪽 호버
+      'home3.png', // 오른쪽 호버
+    ];
+
+    // ====== ELEMENTS ======
+    const base = document.getElementById('bg-base');
+    const swap = document.getElementById('bg-swap');
+    const hero = document.getElementById('hero');
+    const leftZone = document.getElementById('zone-left');
+    const rightZone = document.getElementById('zone-right');
+
+    // Preload
+    IMAGES.forEach(src=>{ const i=new Image(); i.src=src; });
+
+    // 초기 배경
+    base.style.backgroundImage = `url('${IMAGES[0]}')`;
+    swap.style.backgroundImage = `url('${IMAGES[0]}')`;
+
+    function showImage(index){
+      swap.style.backgroundImage = `url('${IMAGES[index]}')`;
+      swap.style.opacity = 1;
+    }
+    function resetImage(){
+      swap.style.opacity = 0;
+      setTimeout(()=>{ swap.style.backgroundImage = `url('${IMAGES[0]}')`; }, 650);
+    }
+
+    // 마우스 인터랙션
+    leftZone.addEventListener('mouseenter', ()=>showImage(1));
+    rightZone.addEventListener('mouseenter', ()=>showImage(2));
+    hero.addEventListener('mouseleave', resetImage);
+
+    // 터치 인터랙션
+    leftZone.addEventListener('touchstart', ()=>showImage(1), {passive:true});
+    rightZone.addEventListener('touchstart', ()=>showImage(2), {passive:true});
+    hero.addEventListener('touchend', resetImage);
+
+    // 클릭 시 다른 페이지로 이동
+    leftZone.addEventListener('click', () => {
+      window.location.href = 'character2.html'; // 왼쪽 클릭 시 이동할 페이지
+    });
+    rightZone.addEventListener('click', () => {
+      window.location.href = 'character.html'; // 오른쪽 클릭 시 이동할 페이지
+    });
+
+    // 키보드 접근
+    window.addEventListener('keydown', (e)=>{
+      if (e.key==='ArrowLeft') { showImage(1); }
+      else if (e.key==='ArrowRight') { showImage(2); }
+      else if (e.key==='Escape') { resetImage(); }
+    });
+  </script>
+</body>
+</html>

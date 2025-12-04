@@ -1,0 +1,769 @@
+
+<!DOCTYPE html>
+
+<html lang="en-GB">
+
+<head>
+
+    <meta charset="utf-8">
+
+    <title>Minimal Skrollr Parallax with Character</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+   
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+
+        /* ==================== CSS 스타일 (퍼센트 기반) ==================== */
+
+       
+
+        /* 최소한의 테스트 스타일 */
+
+        body { margin: 0; min-height: 20000; }
+
+       
+
+        /* 로딩 화면 스타일 */
+
+        .loading {
+
+            position: fixed; inset: 0;
+
+            background: #6eb96c;
+
+            color: white;
+
+            display: grid;
+
+            place-items: center;
+
+            z-index: 1000;
+
+        }
+
+       
+
+        /* 컨테이너 스타일 */
+
+        .container {
+
+            display: none;
+
+            width: 100%;
+
+            height: 100%;
+
+        }
+
+       
+
+        /* Scene은 고정된 뷰포트 영역 */
+
+        .scene {
+
+            position: fixed;
+
+            inset: 0;
+
+        }
+
+       
+
+        /* 캐릭터 이미지 스타일 */
+
+        .character-img {
+
+            position: absolute;
+
+            width: 14%;
+
+            height: auto;
+
+            left: 30%;
+
+            top: 26%;
+
+        }
+
+        /* 그로기 데니*/
+
+        .groggydeny {
+
+            position: absolute;
+
+            width: 17%;
+
+            height: auto;
+
+            left: 20%;
+
+            top: 50%;
+
+        }
+
+        .groggydeny2 {
+
+            position: absolute;
+
+            width: 20%;
+
+            height: auto;
+
+            left: 17%;
+
+            top: 50%;
+
+        }
+
+       
+
+        /* .box 스타일 (트럭 및 No Entry) */
+
+        .box {
+
+            position: absolute;
+
+            width: 14%;
+
+            height: auto;
+
+            background-color: transparent;
+
+            color: white;
+
+            text-align: center;
+
+            line-height: 100px;
+
+        }
+
+/* 헬기 스타일 (트럭 및 No Entry) */
+
+        .helicopter {
+
+            position: absolute;
+
+            width: 35%;
+
+            height: auto;
+
+            background-color: transparent;
+
+            color: white;
+
+            text-align: center;
+
+            line-height: 100px;
+
+        }
+
+
+        /* 맞을때 먼지 */
+
+        .dust {
+
+            position: absolute;
+
+            width: 30%;
+
+            height: auto;
+
+            background-color: transparent;
+
+            color: white;
+
+            text-align: center;
+
+            line-height: 100px;
+
+        }
+
+         /* 맞을때 먼지 */
+
+        .home {
+
+            position: absolute;
+
+            width: 30%;
+
+            height: auto;
+
+            background-color: transparent;
+
+            color: white;
+
+            text-align: center;
+
+            line-height: 100px;
+
+        }
+       
+
+        /* 배경 이미지 스타일 (HTML 내 img 태그에 적용할 스타일) */
+
+        .background-layer {
+
+            position: absolute;
+
+            width: 104%;
+
+            min-height: 100%;
+
+            z-index: -1;
+
+            top: 0;
+
+            left: 0;
+
+        }
+
+           .back-btn{
+  position:fixed;
+  top:20px; left:20px;
+  background:none;          /* 배경 제거 */
+  border:none;              /* 테두리 제거 */
+  padding:0;                /* 여백 제거 */
+  cursor:pointer;
+  z-index:10;
+}
+
+.back-btn img{
+  width:60px;               /* 버튼 이미지 크기 */
+  height:auto;
+  display:block;
+  transition:filter .2s ease;
+}
+
+.back-btn:hover img{
+  filter:brightness(1.2);   /* 호버 시 살짝 밝게 */
+}
+
+    .back-btn:active{
+      transform:translateY(0);
+    }
+
+#footer {
+        position: absolute; /* ⬅️ fixed에서 absolute로 변경 */
+        top: 100; /* ⬅️ min-height가 끝나는 페이지 맨 아래에 배치 */
+        left: 5%;
+        width: 100%;
+        height: 75%;
+        background-color: rgba(0, 0, 0, 0);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+.footer-button {
+    
+    margin:  10%; /* ⬅️ 좌우 간격을 10px에서 30px로 늘림 */
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 5px;
+}
+    </style>
+
+</head>
+
+<body>
+
+    <!-- 🔙 뒤로가기 버튼 -->
+<button class="back-btn" onclick="history.back()">
+  <img src="back2.png" alt="뒤로가기" />
+</button>
+
+
+    <div id="skrollr-body">
+
+       
+
+        <div class="loading">
+
+            Loading...
+
+        </div>
+
+       
+
+        <div class="container">
+
+           
+
+            <div class="scene">
+
+               
+
+                <img src="dennymap.png" alt="Parallax Background Map" class="background-layer"
+
+                    data-0="transform: translateY(0%) translateX(0%);" /* ⬅️ 3%로 조정 */
+
+                    data-1200="transform: translateY(-18.33%) translateX(0%);" /* ⬅️ 3%로 조정 */
+
+                    data-5000="transform: translateY(-18.33%) translateX(0%);" /* ⬅️ 3%로 조정 */
+                    data-5500="transform: translateY(-35.33%) translateX(0%);" /* ⬅️ 3%로 조정 */
+                    data-14400="transform: translateY(-35.33%) translateX(0%);" /* ⬅️ 3%로 조정 */
+                    data-17000="transform: translateY(-58%) translateX(0%);" /* ⬅️ 3%로 조정 */
+                    data-17400="transform: translateY(-58%) translateX(0%);" /* ⬅️ 3%로 조정 */
+
+
+                    data-20000="transform: translateY(-85%) translateX(0%);" /* ⬅️ 3%로 조정 */
+
+
+                   
+               >
+
+               
+
+
+               <img src="badman1weapon.png" alt="No Entry Image" class="box" style="top: 30%;"   /* 무기 나오는 애들  */
+
+                   
+
+                    data-6999="left: 10%; top: 10%; opacity: 0;"
+
+                    data-7000="left: 10%; top: 10%; opacity: 1;"
+
+                    data-11499="left: 10%; top: 10%; opacity: 1;"
+
+                    data-11900="left: -30%; top: 10%; opacity: 1;"
+
+                    
+                     >
+                    
+                  <img src="badman2weapon.png" alt="No Entry Image" class="box" style="top: 30%;"
+
+                  data-6999="left: 20%; top: 10%; opacity: 0;"
+
+                    data-7000="left: 20%; top: 10%; opacity: 1;"
+
+                    data-11499="left: 20%; top: 10%; opacity: 1;"
+
+                    data-11900="left: -20%; top: 10%; opacity: 1;"
+                    >
+
+                    
+
+
+
+
+                  <img src="badman1.png" alt="No Entry Image" class="box" style="top: 30%;"   /* 늦게 나오는 애들  */
+
+                   
+
+                    data-5100="left: -40%; top: 10%; opacity: 0;"
+
+                    data-5500="left: -10%; top: 10%; opacity: 0;"
+
+                    data-5600="left: -10%; top: 10%; opacity: 1;"
+
+                  
+
+                   data-6999="left: 10%; top: 10%; opacity: 1;"
+
+                    data-7000="left: 10%; top: 10%; opacity: 0;"
+                     >
+                    
+                  <img src="badman2.png" alt="No Entry Image" class="box" style="top: 30%;"
+
+                   
+
+                    data-5100="left: -30%; top: 10%; opacity: 0;"
+
+                    data-5500="left: 0%; top: 10%; opacity: 0;"
+
+                    data-5600="left: 0%; top: 10%; opacity: 1;"
+
+                
+
+                    data-6999="left: 20%; top: 10%; opacity: 1;"
+
+                    data-7000="left: -20%; top: 10%; opacity: 0;"
+
+
+                >
+
+                <img src="goodman.png" alt="No Entry Image" class="box" style="top: 30%;"   /* 뒤 착한 애들  */
+
+                    
+                    data-12500="left: 100%; top: 20%; opacity: 1;"
+
+                    data-14000="left: 15%; top: 20%; opacity: 1;"
+
+                    data-16200="left: 15%; top: 20%; opacity: 1;"
+
+                    data-16300="left: 15%; top: 20%; opacity: 0;"
+                    
+                    >
+
+                    <img src="goodman.png" alt="No Entry Image" class="box" style="top: 30%;"   
+                    
+                    data-12500="left: 100%; top: 20%; opacity: 1;"
+
+                    data-14000="left: 25%; top: 20%; opacity: 1;"
+
+                    data-16200="left: 25%; top: 20%; opacity: 1;"
+
+                    data-16300="left: 25%; top: 20%; opacity: 0;"
+                    
+                    
+                    >
+
+
+
+             <img src="groggydeny.png" alt="Character Juan" class="groggydeny"  /* 쓰러진 데니  */
+
+                 
+                    data-11899="top: 50%; opacity: 0;"
+
+                    data-11900="top: 50%; opacity: 1;"
+
+                    data-14000="top: 50%; opacity: 1;"
+
+                    data-14001="top: 50%; opacity: 0;"
+
+                    >
+
+                    
+             <img src="groggydeny2.png" alt="Character Juan" class="groggydeny2"  /* 쓰러진 데니2  */
+
+                 
+                    data-14000="top: 50%; opacity: 0;"
+
+                    data-14001="top: 50%; opacity: 1;"
+
+                    data-16100="top: 50%; opacity: 1;"
+
+                    data-16200="top: 50%; opacity: 0;"
+
+                    >
+
+
+                    <img src="denny.png" alt="Character Juan" class="character-img"  /* 데니  */
+
+                    data-1100="opacity: 0; left: 30%; top: 26%;"
+
+                    data-2500="opacity:0; left: 30%; top: 26%;"
+
+                    data-4000="top: 30%; left: 20%; opacity: 1;"
+
+                    data-5500="top: 30%; opacity: 1;"
+
+                    data-11899="top: 30%; opacity: 1;"
+
+                    data-11900="top: 30%; opacity: 0;"
+
+                    data-17600="top: 30%; left: 23.5%; opacity: 0;"
+
+                    data-17700="top: 30%; left: 23.5%; opacity: 1;"
+
+                    data-18000="top: 30%; left: 23.5%; opacity: 1;"
+
+                    data-18700="top: 30%; left: 23.5%; opacity: 0;"
+
+
+
+                    
+
+                    >
+
+                    <img src="home.png" alt="No Entry Image" class="home" style="top: 30%;"   /* 집  */
+
+                    
+                    data-11500="left: 100%; top: 15%; opacity: 1;"
+
+                    data-13000="left: 70%; top: 15%; opacity: 1;"
+                    
+                    data-14400="left: 70%; top: 15%; opacity: 1;"
+
+                    data-16000="left: 70%; top: -100%; opacity: 1;"
+                    >
+
+                    <img src="goodman.png" alt="No Entry Image" class="box" style="top: 30%;"   /* 앞 착한 애들  */
+
+                    
+                    data-12500="left: 100%; top: 45%; opacity: 1;"
+
+                    data-14000="left: 15%; top: 45%; opacity: 1;"
+                    
+                    data-15900="left: 15%; top: 45%; opacity: 1;"
+
+                    data-16000="left: 15%; top: 45%; opacity: 0;"
+                    >
+
+                   
+
+                    <img src="goodman.png" alt="No Entry Image" class="box" style="top: 30%;"
+
+                    
+                    data-12500="left: 100%; top: 45%; opacity: 1;"
+
+                    data-14000="left: 25%; top: 45%; opacity: 1;"
+
+                    data-15900="left: 25%; top: 45%; opacity: 1;"
+
+                    data-16000="left: 25%; top: 45%; opacity: 0;"
+
+                >
+
+
+
+                <img src="badman1.png" alt="No Entry Image" class="box" style="top: 30%;"   /* 먼저 나오는 애들  */
+
+                    data-800="left: -40%; top: 80%; opacity: 0;"
+
+                    data-1200="left: -10%; top: 45%; opacity: 0;"
+
+                    data-1300="left: -10%; top: 45%; opacity: 1;"
+
+                    data-3999="left: 10%; top: 45%; opacity: 1;"
+
+                    data-6999="left: 10%; top: 45%; opacity: 1;"
+
+                    data-7000="left: 10%; top: 45%; opacity: 0;">
+
+                   
+
+                    <img src="badman2.png" alt="No Entry Image" class="box" style="top: 30%;"
+
+                    data-800="left: -30%; top: 80%; opacity: 0;"
+
+                    data-1200="left: 0%; top: 45%; opacity: 0;"
+
+                    data-1300="left: 0%; top: 45%; opacity: 1;"
+
+                    data-3999="left: 20%; top: 45%; opacity: 1;"
+
+                    data-6999="left: 20%; top: 45%; opacity: 1;"
+
+                    data-7000="left: 20%; top: 45%; opacity: 0;"
+
+                    >
+
+                    <img src="badman1weapon.png" alt="No Entry Image" class="box" style="top: 30%;" /* 먼저 나오는 애들 무기  */
+
+
+                    data-6999="left: 10%; top: 45%; opacity: 0;"
+
+                    data-7000="left: 10%; top: 45%; opacity: 1;"
+
+                    data-11499="left: 10%; top: 45%; opacity: 1;"
+
+                    data-11900="left: -30%; top: 45%; opacity: 1;">
+
+                    <img src="badman2weapon.png" alt="No Entry Image" class="box" style="top: 30%;"
+
+                  data-6999="left: 20%; top: 45%; opacity: 0;"
+
+                    data-7000="left: 20%; top: 45%; opacity: 1;"
+
+                    data-11499="left: 20%; top: 45%; opacity: 1;"
+                    data-11900="left: -20%; top: 45%; opacity: 1;"
+                    
+                    
+                >
+
+
+                 <img src="dust1.png" alt="dust" class="dust" style="top: 30%;" /* 맞을때 먼지  */
+                 
+                 data-7899="left: 10%; top: 30%; opacity: 0;"
+
+                    data-8900="left: 10%; top: 15%; opacity: 1;"
+                    data-9899="left: 10%; top: 15%; opacity: 1;"
+                    data-9900="left: 10%; top: 15%; opacity: 0;"
+                 
+                 >
+
+
+                 <img src="dust2.png" alt="dust" class="dust" style="top: 30%;" /* 맞을때 먼지  */
+                 
+                 data-8899="left: 10%; top: 30%; opacity: 0;"
+
+                    data-9900="left: 10%; top: 15%; opacity: 1;"
+                    data-10899="left: 10%; top: 15%; opacity: 1;"
+                    data-10900="left: 10%; top: 15%; opacity: 0;"
+                 
+                 >
+
+                 
+                 <img src="dust3.png" alt="dust" class="dust" style="top: 30%;" /* 맞을때 먼지  */
+                 
+                 data-9899="left: 10%; top: 30%; opacity: 0;"
+
+                    data-10900="left: 10%; top: 15%; opacity: 1;"
+                    data-11899="left: 10%; top: 15%; opacity: 1;"
+                    data-12900="left: 10%; top: 15%; opacity: 0;"
+                 
+                 >
+
+
+                  <img src="denny's car.svg" alt="Denny's Car Image" class="box"  /* 데니 트럭  */
+
+                    data-0="left: 34%; top: -100%;"        
+
+                    data-399="left: 34%; top: 10%;"  
+
+                    data-400="left: 34%; top: 10%;"
+
+                    data-4999="left: 34%; top: 10%;"
+
+                    data-5000="left: 34%; top: 10%;"
+
+                    data-6000="left: 34%; top: -700%;"
+
+                >
+
+                  <img src="chat/dennychat2.png" alt="Denny's Car Image" class="box" /* 데니가 끌려가는 장면 */
+
+                   
+                    data-3999="left: 20%; top: 10%; opacity: 0;"
+
+                    data-4000="left: 20%; top: 10%; opacity: 1;"
+                    data-4999="left: 20%; top: 10%; opacity: 1;"
+                    data-5000="left: 20%; top: 10%; opacity: 0;"
+                    >
+
+                    <img src="chat/dennychat3.png" alt="Denny's Car Image" class="box"
+
+                   
+                    data-3499="left: 30%; top: 30%; opacity: 0;"
+
+                    data-3500="left: 30%; top: 30%; opacity: 1;"
+                    data-4499="left: 30%; top: 30%; opacity: 1;"
+                    data-4500="left: 30%; top: 30%; opacity: 0;"
+                    >
+
+                    <img src="chat/dennychat4.png" alt="Denny's Car Image" class="box"  /* 데니가 폭행당하는 장면 */
+
+                   
+                    data-8399="left: 20%; top: 10%; opacity: 0;"
+
+                    data-8400="left: 20%; top: 10%; opacity: 1;"
+                    data-9399="left: 20%; top: 10%; opacity: 1;"
+                    data-9400="left: 20%; top: 10%; opacity: 0;"
+                    >
+
+                    <img src="chat/dennychat5.png" alt="Denny's Car Image" class="box"
+
+                   
+                    data-8899="left: 30%; top: 30%; opacity: 0;"
+
+                    data-8900="left: 30%; top: 30%; opacity: 1;"
+                    data-9899="left: 30%; top: 30%; opacity: 1;"
+                    data-9900="left: 30%; top: 30%; opacity: 0;"
+                    >
+                    
+                    <img src="chat/dennychat6.png" alt="Denny's Car Image" class="box"  /* 데니 구출 장면 */
+
+                   
+                    data-14000="left: 30%; top: 25%; opacity: 0;"
+
+                    data-14001="left: 30%; top: 25%; opacity: 1;"
+                    data-15000="left: 30%; top: 25%; opacity: 1;"
+                    data-15001="left: 30%; top: 25%; opacity: 0;"
+                    >
+
+                    <img src="chat/dennychat7.png" alt="Denny's Car Image" class="box"  /* 데니 구출 장면 */
+
+                   
+                    data-14400="left: 10%; top: 3%; opacity: 0;"
+
+                    data-14401="left: 10%; top: 3%; opacity: 1;"
+                    data-15400="left: 10%; top: 3%; opacity: 1;"
+                    data-15401="left: 10%; top: 3%; opacity: 0;"
+                    >                    
+
+                    <img src="helicopter.svg" alt="No Entry Image" class="helicopter" style="top: 30%;"   /* 헬기  */
+
+                   data-9000="left: 100%; top: 10%; opacity: 1;"
+
+                    data-10500="left: 50%; top: 10%; opacity: 1;"
+
+                    data-11500="left: 50%; top: 10%; opacity: 1;"  /* 여기까지 홀드  */
+                    
+                    data-12500="left: -40%; top: 10%; opacity: 1;"  /* 왼쪽으로 퇴장  */
+
+                    
+                     >
+                    
+
+
+           
+
+ 
+
+            </div>
+
+
+
+        </div>
+
+    </div>
+
+   
+
+    <script src="js/jquery-1.8.2.min.js"></script>
+
+    <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.8.2.min.js"><\/script>')</script>
+
+    <script src="js/skrollr.min.js"></script>
+
+   
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+
+           
+
+            $(window).load(function() {
+
+                $('.loading').hide();
+
+                $('.container').fadeIn();
+
+            });
+
+
+
+            skrollr.init({
+
+                smoothScrolling: true,
+
+                scale: 2,
+
+                easing: 'swing'
+
+            });
+
+
+            // 💡 새로 추가된 기능: 오른쪽 버튼 클릭 시 맨 위로 스크롤
+            $('#scrollUpButton').click(function(e) {
+                e.preventDefault(); 
+                $('html, body').animate({
+                    scrollTop: 0 // 스크롤 위치를 0 (맨 위)으로 설정
+                }, 800); // 800ms 동안 부드럽게 스크롤
+            });
+        });
+     
+    </script>
+
+
+<div id="footer">
+        <a href="https://namu.wiki/w/LA%20%ED%8F%AD%EB%8F%99" class="footer-button" style="text-decoration: none;">
+        <img src="button/moreinfo.png" alt="이전" style="width: 15%;  vertical-align: middle;"> 
+    </a>
+    
+    <button class="footer-button" id="scrollUpButton">
+        <img src="button/up.png" alt="다음" style="width: 15%;  vertical-align: middle;">
+    </button>
+    </div>
+
+</body>
+
+</html>
